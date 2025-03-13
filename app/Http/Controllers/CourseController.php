@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\courses;
 use Illuminate\Http\Request;
 
-class CourseController extends Controller
+class StudentController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $courses = courses::all();
+        return view('courses.controlersIndex', compact('courses'));
+
     }
 
     /**
@@ -27,7 +30,15 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'descreption' => 'required',
+        ]);
+        students::create([
+            'name' => $request->name,
+            'descreption' => $request->descreption,
+        ]);
+        return redirect()->route('layouts.app');
     }
 
     /**
@@ -35,7 +46,8 @@ class CourseController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $courses = courses::findOrFail($id);
+        return view('layouts.app', compact('courses'));
     }
 
     /**
@@ -43,7 +55,8 @@ class CourseController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $courses = courses::findOrFail($id);
+        return view('layouts.app', compact('courses'));
     }
 
     /**
@@ -51,7 +64,16 @@ class CourseController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'descreption' => 'required',
+        ]);
+        $courses = students::findOrFail($id);
+        $course->update([
+            'name' => $request->name,
+            'descreption' => $request->descreption,
+        ]);
+        return redirect()->route('layouts.app');
     }
 
     /**
@@ -59,6 +81,8 @@ class CourseController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $courses = courses::findOrFail($id);
+        $courses->delete();
+        return redirect()->route('layouts.app');
     }
 }

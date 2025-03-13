@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Students;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
@@ -11,7 +12,9 @@ class StudentController extends Controller
      */
     public function index()
     {
-        //
+        $students = Students::all();
+        return view('students.studentsIndex', compact('students'));
+
     }
 
     /**
@@ -27,7 +30,15 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'age' => 'required',
+        ]);
+        students::create([
+            'name' => $request->name,
+            'age' => $request->age,
+        ]);
+        return redirect()->route('layouts.app');
     }
 
     /**
@@ -35,7 +46,8 @@ class StudentController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $students = students::findOrFail($id);
+        return view('layouts.app', compact('students'));
     }
 
     /**
@@ -43,7 +55,8 @@ class StudentController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $students = students::findOrFail($id);
+        return view('layouts.app', compact('students'));
     }
 
     /**
@@ -51,7 +64,16 @@ class StudentController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'age' => 'required',
+        ]);
+        $students = students::findOrFail($id);
+        $student->update([
+            'name' => $request->name,
+            'age' => $request->age,
+        ]);
+        return redirect()->route('layouts.app');
     }
 
     /**
@@ -59,6 +81,8 @@ class StudentController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $students = students::findOrFail($id);
+        $students->delete();
+        return redirect()->route('layouts.app');
     }
 }
